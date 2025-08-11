@@ -1,0 +1,33 @@
+# Jump library index.
+# For each difficulty, define regions that map to the grid positions
+# in the 'thejumper_library' world. Each region uses block coordinates
+# and is inclusive on both min and max.
+
+difficulties:
+  I:
+    regions:
+      # Example region entries. Replace with real grid coordinates later.
+      r1:
+        world: thejumper_library
+        min: { x: 0, y: 70, z: 0 }
+        max: { x: 9, y: 80, z: 9 }
+      r2:
+        world: thejumper_library
+        min: { x: 12, y: 70, z: 0 }
+        max: { x: 21, y: 80, z: 9 }
+  II:
+    regions: {}
+  III:
+    regions: {}
+  IV:
+    regions: {}
+  V:
+    regions: {}
+  VI:
+    regions: {}
+  VII:
+    regions: {}
+  VIII:
+    regions: {}
+  IX:
+    regions: {}

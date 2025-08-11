@@ -1,0 +1,28 @@
+# Core configuration for TheJumper
+
+worlds:
+  # World where players perform jumps
+  game: thejumper_game
+  # World containing the jump library grid (loaded via Multiverse or similar)
+  library: thejumper_library
+
+lane:
+  # Distance between player lanes along Z
+  spacingZ: 21
+  # Global X where each lane starts
+  startX: 0
+  # Base Y for platforms and jumps
+  baseY: 80
+  startPlatform:
+    size: 5
+    material: LIGHT_GRAY_CONCRETE
+
+gameplay:
+  # Number of jumps visible/queued per player at any time
+  preloadedJumps: 3
+  # Number of completions required to promote to the next difficulty
+  completionsPerDifficulty: 20
+  # Total time limit for the event in seconds (1 hour)
+  timeLimitSeconds: 3600
+  # How far below the base Y the player can fall before counting as a fall
+  fallYBuffer: 10
