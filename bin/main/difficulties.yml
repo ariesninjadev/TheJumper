@@ -1,0 +1,22 @@
+# Difficulty to block material mapping.
+# These blocks are used to replace the library start/end markers when
+# a jump is loaded into a player's lane.
+
+difficulties:
+  I:
+    block: BLUE_CONCRETE
+  II:
+    block: LIGHT_BLUE_CONCRETE
+  III:
+    block: LIME_CONCRETE
+  IV:
+    block: YELLOW_CONCRETE
+  V:
+    block: ORANGE_CONCRETE
+  VI:
+    block: RED_CONCRETE
+  VII:
+    block: PINK_CONCRETE
+  VIII:
+    block: PURPLE_CONCRETE
+  IX:

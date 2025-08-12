@@ -1,0 +1,38 @@
+teleportenabled: true
+teleportauto: false
+godmode: false
+muted: false
+jailed: false
+ip-address: 82.192.163.123
+afk: false
+socialspy: false
+npc: false
+powertoolsenabled: true
+accepting-pay: true
+baltop-exempt: false
+timestamps:
+  lastteleport: 1754945505175
+  lastheal: 0
+  mute: 0
+  jail: 0
+  onlinejail: 0
+  logout: 1754992747638
+  login: 1754992009856
+money: '0'
+last-account-name: Fini_Panini
+lastlocation:
+  world: 2c59293c-840d-4a7c-83ac-796fc9c69655
+  world-name: thejumper_game
+  x: 1.9191064003399416
+  y: -60.0
+  z: 2.6590130067371263
+  yaw: 138.12933349609375
+  pitch: 15.683060646057129
+logoutlocation:
+  world: 03742c4a-54f7-4e5c-a209-772142fe54a4
+  world-name: thejumper_game
+  x: 84.48754138642175
+  y: 82.0
+  z: 54.061112703698996
+  yaw: -95.03807067871094
+  pitch: 47.379539489746094

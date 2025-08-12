@@ -14,8 +14,9 @@ public final class PlayerQuitListener implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
+        // Do not remove session on quit; keep scores on the board. Free lane only.
         if (plugin.getGameManager() == null) return;
-        plugin.getGameManager().leave(event.getPlayer());
+        plugin.getGameManager().handlePlayerQuitKeepScore(event.getPlayer());
     }
 }
 

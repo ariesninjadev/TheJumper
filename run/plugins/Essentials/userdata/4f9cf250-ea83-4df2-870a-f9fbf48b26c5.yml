@@ -1,0 +1,38 @@
+teleportenabled: true
+teleportauto: false
+godmode: false
+muted: false
+jailed: false
+ip-address: 178.121.29.139
+afk: false
+socialspy: false
+npc: false
+powertoolsenabled: true
+accepting-pay: true
+baltop-exempt: false
+timestamps:
+  lastteleport: 0
+  lastheal: 0
+  mute: 0
+  jail: 0
+  onlinejail: 0
+  logout: 1754937999941
+  login: 1754936338225
+money: '0'
+last-account-name: catlover123421
+lastlocation:
+  world: 2c59293c-840d-4a7c-83ac-796fc9c69655
+  world-name: thejumper_game
+  x: 48.61222622672708
+  y: 78.09841987109063
+  z: 45.02326608854689
+  yaw: -93.6001968383789
+  pitch: 49.65011978149414
+logoutlocation:
+  world: 2c59293c-840d-4a7c-83ac-796fc9c69655
+  world-name: thejumper_game
+  x: 0.5
+  y: 80.0
+  z: 42.5
+  yaw: -90.0
+  pitch: -0.15000002086162567

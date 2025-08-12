@@ -5,8 +5,11 @@ api-version: "1.20"
 commands:
   jumper:
     description: Core command for TheJumper
-    usage: /<command> [start|stop|join|leave|reload|setdiff]
+    usage: /<command> [start|stop|reset|join|leave|reload|setdiff|joinall|clearscore]
     permission: thejumper.use
+  jumperhelp:
+    description: Show TheJumper help book
+    usage: /<command>
 permissions:
   thejumper.use:
     default: true

@@ -15,15 +15,23 @@ public final class PlayerSession {
     private Difficulty difficulty;
     private int completionsInDifficulty;
     private int strikesInDifficulty;
+    private int totalScore;
+    private int scoreAtDifficultyStart;
+    private int bestScore;
+    private long difficultyStartEpochMs;
     private final List<Location> queuedEndBlocks = new ArrayList<>();
     private final Map<Difficulty, Location> lastEndByDifficulty = new EnumMap<>(Difficulty.class);
     private Location nextStartAt;
     private final List<Location> queuedStartBlocks = new ArrayList<>();
     private Location pendingEndRemoval;
+    private int maxGeneratedX;
+    private final java.util.Set<Location> placedBlocks = new java.util.HashSet<>();
+    private boolean activeInEvent = true;
     public PlayerSession(UUID playerId, int laneIndex, Difficulty startDifficulty) {
         this.playerId = playerId;
         this.laneIndex = laneIndex;
         this.difficulty = startDifficulty;
+        this.difficultyStartEpochMs = System.currentTimeMillis();
     }
 
     public UUID getPlayerId() {
@@ -42,6 +50,9 @@ public final class PlayerSession {
         this.difficulty = difficulty;
         this.completionsInDifficulty = 0;
         this.strikesInDifficulty = 0;
+        // Persist totalScore across difficulties, but snapshot baseline for safe-death resets
+        this.scoreAtDifficultyStart = this.totalScore;
+        this.difficultyStartEpochMs = System.currentTimeMillis();
         queuedEndBlocks.clear();
         this.nextStartAt = null;
         queuedStartBlocks.clear();
@@ -54,6 +65,10 @@ public final class PlayerSession {
 
     public void incrementCompletions() {
         this.completionsInDifficulty += 1;
+    }
+
+    public void resetCompletions() {
+        this.completionsInDifficulty = 0;
     }
 
     public int getStrikesInDifficulty() {
@@ -98,6 +113,72 @@ public final class PlayerSession {
 
     public void setPendingEndRemoval(Location loc) {
         this.pendingEndRemoval = loc == null ? null : loc.clone();
+    }
+
+    public int getTotalScore() {
+        return totalScore;
+    }
+
+    public void incrementTotalScore() {
+        this.totalScore += 1;
+        if (this.totalScore > this.bestScore) {
+            this.bestScore = this.totalScore;
+        }
+    }
+
+    public void resetTotalScoreToDifficultyStart() {
+        this.totalScore = this.scoreAtDifficultyStart;
+    }
+
+    public void resetAllScore() {
+        this.totalScore = 0;
+        this.scoreAtDifficultyStart = 0;
+    }
+
+    public int getBestScore() {
+        return bestScore;
+    }
+
+    public void resetBestScore() {
+        this.bestScore = 0;
+    }
+
+    public java.util.Set<Location> getPlacedBlocks() {
+        return placedBlocks;
+    }
+
+    public void addPlacedBlock(Location loc) {
+        if (loc != null) this.placedBlocks.add(loc.clone());
+    }
+
+    public void clearPlacedBlocks() {
+        this.placedBlocks.clear();
+    }
+
+    public boolean isActiveInEvent() {
+        return activeInEvent;
+    }
+
+    public void setActiveInEvent(boolean activeInEvent) {
+        this.activeInEvent = activeInEvent;
+    }
+
+    public int getMaxGeneratedX() {
+        return maxGeneratedX;
+    }
+
+    public void updateMaxGeneratedX(int x) {
+        if (x > this.maxGeneratedX) {
+            this.maxGeneratedX = x;
+        }
+    }
+
+    public long getDifficultyStartEpochMs() {
+        return difficultyStartEpochMs;
+    }
+
+    public void markDifficultyRestartedNow() {
+        this.difficultyStartEpochMs = System.currentTimeMillis();
     }
 }
 

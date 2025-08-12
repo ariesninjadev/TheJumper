@@ -1,0 +1,38 @@
+teleportenabled: true
+teleportauto: false
+godmode: false
+muted: false
+jailed: false
+ip-address: 127.0.0.1
+afk: false
+socialspy: false
+npc: false
+powertoolsenabled: true
+accepting-pay: true
+baltop-exempt: false
+timestamps:
+  lastteleport: 1755008015496
+  lastheal: 0
+  mute: 0
+  jail: 0
+  onlinejail: 0
+  logout: 1754978825192
+  login: 1754980939448
+money: '0'
+last-account-name: pvty
+lastlocation:
+  world: 580e9b3e-b563-456b-a5c7-4fdf60599f6d
+  world-name: lobby
+  x: 69.7494455047917
+  y: 69.0
+  z: 68.90767962910616
+  yaw: -180.0
+  pitch: 0.0
+logoutlocation:
+  world: 580e9b3e-b563-456b-a5c7-4fdf60599f6d
+  world-name: lobby
+  x: 69.5
+  y: 69.0
+  z: 64.26185714850733
+  yaw: -180.0
+  pitch: 0.0

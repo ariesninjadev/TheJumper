@@ -1,0 +1,420 @@
+# Jump library index.
+# For each difficulty, define regions that map to the grid positions
+# in the 'thejumper_library' world. Each region uses block coordinates
+# and is inclusive on both min and max.
+
+difficulties:
+  I:
+    regions:
+      r1:
+        world: thejumper_library
+        min: { x: -198, y: -61, z: -110 }
+        max: { x: -191, y: -31, z: -103 }
+      r2:
+        world: thejumper_library
+        min: { x: -191, y: -61, z: -110 }
+        max: { x: -184, y: -31, z: -103 }
+      r3:
+        world: thejumper_library
+        min: { x: -184, y: -61, z: -110 }
+        max: { x: -177, y: -31, z: -103 }
+      r4:
+        world: thejumper_library
+        min: { x: -177, y: -61, z: -110 }
+        max: { x: -170, y: -31, z: -103 }
+      r5:
+        world: thejumper_library
+        min: { x: -170, y: -61, z: -110 }
+        max: { x: -163, y: -31, z: -103 }
+      r6:
+        world: thejumper_library
+        min: { x: -163, y: -61, z: -110 }
+        max: { x: -156, y: -31, z: -103 }
+      r7:
+        world: thejumper_library
+        min: { x: -156, y: -61, z: -110 }
+        max: { x: -149, y: -31, z: -103 }
+      r8:
+        world: thejumper_library
+        min: { x: -149, y: -61, z: -110 }
+        max: { x: -142, y: -31, z: -103 }
+      r9:
+        world: thejumper_library
+        min: { x: -142, y: -61, z: -110 }
+        max: { x: -135, y: -31, z: -103 }
+      r10:
+        world: thejumper_library
+        min: { x: -135, y: -61, z: -110 }
+        max: { x: -128, y: -31, z: -103 }
+      r11:
+        world: thejumper_library
+        min: { x: -128, y: -61, z: -110 }
+        max: { x: -121, y: -31, z: -103 }
+  II:
+    regions:
+      r1:
+        world: thejumper_library
+        min: { x: -198, y: -61, z: -103 }
+        max: { x: -191, y: -31, z: -96 }
+      r2:
+        world: thejumper_library
+        min: { x: -191, y: -61, z: -103 }
+        max: { x: -184, y: -31, z: -96 }
+      r3:
+        world: thejumper_library
+        min: { x: -184, y: -61, z: -103 }
+        max: { x: -177, y: -31, z: -96 }
+      r4:
+        world: thejumper_library
+        min: { x: -177, y: -61, z: -103 }
+        max: { x: -170, y: -31, z: -96 }
+      r5:
+        world: thejumper_library
+        min: { x: -170, y: -61, z: -103 }
+        max: { x: -163, y: -31, z: -96 }
+      r6:
+        world: thejumper_library
+        min: { x: -163, y: -61, z: -103 }
+        max: { x: -156, y: -31, z: -96 }
+      r7:
+        world: thejumper_library
+        min: { x: -156, y: -61, z: -103 }
+        max: { x: -149, y: -31, z: -96 }
+      r8:
+        world: thejumper_library
+        min: { x: -149, y: -61, z: -103 }
+        max: { x: -142, y: -31, z: -96 }
+      r9:
+        world: thejumper_library
+        min: { x: -142, y: -61, z: -103 }
+        max: { x: -135, y: -31, z: -96 }
+      r10:
+        world: thejumper_library
+        min: { x: -135, y: -61, z: -103 }
+        max: { x: -128, y: -31, z: -96 }
+      r11:
+        world: thejumper_library
+        min: { x: -128, y: -61, z: -103 }
+        max: { x: -121, y: -31, z: -96 }
+  III:
+    regions:
+      r1:
+        world: thejumper_library
+        min: { x: -198, y: -61, z: -96 }
+        max: { x: -191, y: -31, z: -89 }
+      r2:
+        world: thejumper_library
+        min: { x: -191, y: -61, z: -96 }
+        max: { x: -184, y: -31, z: -89 }
+      r3:
+        world: thejumper_library
+        min: { x: -184, y: -61, z: -96 }
+        max: { x: -177, y: -31, z: -89 }
+      r4:
+        world: thejumper_library
+        min: { x: -177, y: -61, z: -96 }
+        max: { x: -170, y: -31, z: -89 }
+      r5:
+        world: thejumper_library
+        min: { x: -170, y: -61, z: -96 }
+        max: { x: -163, y: -31, z: -89 }
+      r6:
+        world: thejumper_library
+        min: { x: -163, y: -61, z: -96 }
+        max: { x: -156, y: -31, z: -89 }
+      r7:
+        world: thejumper_library
+        min: { x: -156, y: -61, z: -96 }
+        max: { x: -149, y: -31, z: -89 }
+      r8:
+        world: thejumper_library
+        min: { x: -149, y: -61, z: -96 }
+        max: { x: -142, y: -31, z: -89 }
+      r9:
+        world: thejumper_library
+        min: { x: -142, y: -61, z: -96 }
+        max: { x: -135, y: -31, z: -89 }
+      r10:
+        world: thejumper_library
+        min: { x: -135, y: -61, z: -96 }
+        max: { x: -128, y: -31, z: -89 }
+      r11:
+        world: thejumper_library
+        min: { x: -128, y: -61, z: -96 }
+        max: { x: -121, y: -31, z: -89 }
+  IV:
+    regions:
+      r1:
+        world: thejumper_library
+        min: { x: -198, y: -61, z: -89 }
+        max: { x: -184, y: -31, z: -75 }
+      r2:
+        world: thejumper_library
+        min: { x: -184, y: -61, z: -89 }
+        max: { x: -170, y: -31, z: -75 }
+      r3:
+        world: thejumper_library
+        min: { x: -170, y: -61, z: -89 }
+        max: { x: -156, y: -31, z: -75 }
+      r4:
+        world: thejumper_library
+        min: { x: -156, y: -61, z: -89 }
+        max: { x: -142, y: -31, z: -75 }
+      r5:
+        world: thejumper_library
+        min: { x: -142, y: -61, z: -89 }
+        max: { x: -128, y: -31, z: -75 }
+      r6:
+        world: thejumper_library
+        min: { x: -128, y: -61, z: -89 }
+        max: { x: -114, y: -31, z: -75 }
+      r7:
+        world: thejumper_library
+        min: { x: -114, y: -61, z: -89 }
+        max: { x: -100, y: -31, z: -75 }
+      r8:
+        world: thejumper_library
+        min: { x: -100, y: -61, z: -89 }
+        max: { x: -86, y: -31, z: -75 }
+      r9:
+        world: thejumper_library
+        min: { x: -86, y: -61, z: -89 }
+        max: { x: -72, y: -31, z: -75 }
+      r10:
+        world: thejumper_library
+        min: { x: -72, y: -61, z: -89 }
+        max: { x: -58, y: -31, z: -75 }
+      r11:
+        world: thejumper_library
+        min: { x: -58, y: -61, z: -89 }
+        max: { x: -44, y: -31, z: -75 }
+  V:
+    regions:
+      r1:
+        world: thejumper_library
+        min: { x: -198, y: -61, z: -75 }
+        max: { x: -184, y: -31, z: -61 }
+      r2:
+        world: thejumper_library
+        min: { x: -184, y: -61, z: -75 }
+        max: { x: -170, y: -31, z: -61 }
+      r3:
+        world: thejumper_library
+        min: { x: -170, y: -61, z: -75 }
+        max: { x: -156, y: -31, z: -61 }
+      r4:
+        world: thejumper_library
+        min: { x: -156, y: -61, z: -75 }
+        max: { x: -142, y: -31, z: -61 }
+      r5:
+        world: thejumper_library
+        min: { x: -142, y: -61, z: -75 }
+        max: { x: -128, y: -31, z: -61 }
+      r6:
+        world: thejumper_library
+        min: { x: -128, y: -61, z: -75 }
+        max: { x: -114, y: -31, z: -61 }
+      r7:
+        world: thejumper_library
+        min: { x: -114, y: -61, z: -75 }
+        max: { x: -100, y: -31, z: -61 }
+      r8:
+        world: thejumper_library
+        min: { x: -100, y: -61, z: -75 }
+        max: { x: -86, y: -31, z: -61 }
+      r9:
+        world: thejumper_library
+        min: { x: -86, y: -61, z: -75 }
+        max: { x: -72, y: -31, z: -61 }
+      r10:
+        world: thejumper_library
+        min: { x: -72, y: -61, z: -75 }
+        max: { x: -58, y: -31, z: -61 }
+      r11:
+        world: thejumper_library
+        min: { x: -58, y: -61, z: -75 }
+        max: { x: -44, y: -31, z: -61 }
+  VI:
+    regions:
+      r1:
+        world: thejumper_library
+        min: { x: -198, y: -61, z: -61 }
+        max: { x: -184, y: -31, z: -47 }
+      r2:
+        world: thejumper_library
+        min: { x: -184, y: -61, z: -61 }
+        max: { x: -170, y: -31, z: -47 }
+      r3:
+        world: thejumper_library
+        min: { x: -170, y: -61, z: -61 }
+        max: { x: -156, y: -31, z: -47 }
+      r4:
+        world: thejumper_library
+        min: { x: -156, y: -61, z: -61 }
+        max: { x: -142, y: -31, z: -47 }
+      r5:
+        world: thejumper_library
+        min: { x: -142, y: -61, z: -61 }
+        max: { x: -128, y: -31, z: -47 }
+      r6:
+        world: thejumper_library
+        min: { x: -128, y: -61, z: -61 }
+        max: { x: -114, y: -31, z: -47 }
+      r7:
+        world: thejumper_library
+        min: { x: -114, y: -61, z: -61 }
+        max: { x: -100, y: -31, z: -47 }
+      r8:
+        world: thejumper_library
+        min: { x: -100, y: -61, z: -61 }
+        max: { x: -86, y: -31, z: -47 }
+      r9:
+        world: thejumper_library
+        min: { x: -86, y: -61, z: -61 }
+        max: { x: -72, y: -31, z: -47 }
+      r10:
+        world: thejumper_library
+        min: { x: -72, y: -61, z: -61 }
+        max: { x: -58, y: -31, z: -47 }
+      r11:
+        world: thejumper_library
+        min: { x: -58, y: -61, z: -61 }
+        max: { x: -44, y: -31, z: -47 }
+  VII:
+    regions:
+      r1:
+        world: thejumper_library
+        min: { x: -198, y: -61, z: -47 }
+        max: { x: -177, y: -31, z: -27 }
+      r2:
+        world: thejumper_library
+        min: { x: -177, y: -61, z: -47 }
+        max: { x: -156, y: -31, z: -27 }
+      r3:
+        world: thejumper_library
+        min: { x: -156, y: -61, z: -47 }
+        max: { x: -135, y: -31, z: -27 }
+      r4:
+        world: thejumper_library
+        min: { x: -135, y: -61, z: -47 }
+        max: { x: -114, y: -31, z: -27 }
+      r5:
+        world: thejumper_library
+        min: { x: -114, y: -61, z: -47 }
+        max: { x: -93, y: -31, z: -27 }
+      r6:
+        world: thejumper_library
+        min: { x: -93, y: -61, z: -47 }
+        max: { x: -72, y: -31, z: -27 }
+      r7:
+        world: thejumper_library
+        min: { x: -72, y: -61, z: -47 }
+        max: { x: -51, y: -31, z: -27 }
+      r8:
+        world: thejumper_library
+        min: { x: -51, y: -61, z: -47 }
+        max: { x: -30, y: -31, z: -27 }
+      r9:
+        world: thejumper_library
+        min: { x: -30, y: -61, z: -47 }
+        max: { x: -9, y: -31, z: -27 }
+      r10:
+        world: thejumper_library
+        min: { x: -9, y: -61, z: -47 }
+        max: { x: 12, y: -31, z: -27 }
+      r11:
+        world: thejumper_library
+        min: { x: 12, y: -61, z: -47 }
+        max: { x: 33, y: -31, z: -27 }
+  VIII:
+    regions:
+      r1:
+        world: thejumper_library
+        min: { x: -198, y: -61, z: -27 }
+        max: { x: -177, y: -31, z: -7 }
+      r2:
+        world: thejumper_library
+        min: { x: -177, y: -61, z: -27 }
+        max: { x: -156, y: -31, z: -7 }
+      r3:
+        world: thejumper_library
+        min: { x: -156, y: -61, z: -27 }
+        max: { x: -135, y: -31, z: -7 }
+      r4:
+        world: thejumper_library
+        min: { x: -135, y: -61, z: -27 }
+        max: { x: -114, y: -31, z: -7 }
+      r5:
+        world: thejumper_library
+        min: { x: -114, y: -61, z: -27 }
+        max: { x: -93, y: -31, z: -7 }
+      r6:
+        world: thejumper_library
+        min: { x: -93, y: -61, z: -27 }
+        max: { x: -72, y: -31, z: -7 }
+      r7:
+        world: thejumper_library
+        min: { x: -72, y: -61, z: -27 }
+        max: { x: -51, y: -31, z: -7 }
+      r8:
+        world: thejumper_library
+        min: { x: -51, y: -61, z: -27 }
+        max: { x: -30, y: -31, z: -7 }
+      r9:
+        world: thejumper_library
+        min: { x: -30, y: -61, z: -27 }
+        max: { x: -9, y: -31, z: -7 }
+      r10:
+        world: thejumper_library
+        min: { x: -9, y: -61, z: -27 }
+        max: { x: 12, y: -31, z: -7 }
+      r11:
+        world: thejumper_library
+        min: { x: 12, y: -61, z: -27 }
+        max: { x: 33, y: -31, z: -7 }
+  IX:
+    regions:
+      r1:
+        world: thejumper_library
+        min: { x: -198, y: -61, z: -7 }
+        max: { x: -177, y: -31, z: 13 }
+      r2:
+        world: thejumper_library
+        min: { x: -177, y: -61, z: -7 }
+        max: { x: -156, y: -31, z: 13 }
+      r3:
+        world: thejumper_library
+        min: { x: -156, y: -61, z: -7 }
+        max: { x: -135, y: -31, z: 13 }
+      r4:
+        world: thejumper_library
+        min: { x: -135, y: -61, z: -7 }
+        max: { x: -114, y: -31, z: 13 }
+      r5:
+        world: thejumper_library
+        min: { x: -114, y: -61, z: -7 }
+        max: { x: -93, y: -31, z: 13 }
+      r6:
+        world: thejumper_library
+        min: { x: -93, y: -61, z: -7 }
+        max: { x: -72, y: -31, z: 13 }
+      r7:
+        world: thejumper_library
+        min: { x: -72, y: -61, z: -7 }
+        max: { x: -51, y: -31, z: 13 }
+      r8:
+        world: thejumper_library
+        min: { x: -51, y: -61, z: -7 }
+        max: { x: -30, y: -31, z: 13 }
+      r9:
+        world: thejumper_library
+        min: { x: -30, y: -61, z: -7 }
+        max: { x: -9, y: -31, z: 13 }
+      r10:
+        world: thejumper_library
+        min: { x: -9, y: -61, z: -7 }
+        max: { x: 12, y: -31, z: 13 }
+      r11:
+        world: thejumper_library
+        min: { x: 12, y: -61, z: -7 }
+        max: { x: 33, y: -31, z: 13 }

@@ -4,6 +4,8 @@ import com.ariesninja.theJumper.library.Difficulty;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.ChatColor;
+import org.bukkit.Color;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -37,6 +39,8 @@ public final class GameConfig {
     private int fallYBuffer;
 
     private final Map<Difficulty, Material> difficultyBlock = new EnumMap<>(Difficulty.class);
+    private static final Map<Material, ChatColor> MATERIAL_TO_CHAT = new EnumMap<>(Material.class);
+    private static final Map<Material, Color> MATERIAL_TO_COLOR = new EnumMap<>(Material.class);
 
     public GameConfig(Plugin plugin) {
         this.plugin = plugin;
@@ -86,6 +90,31 @@ public final class GameConfig {
         for (Difficulty d : Difficulty.values()) {
             difficultyBlock.putIfAbsent(d, Material.WHITE_CONCRETE);
         }
+
+        // Initialize material color maps (basic mapping for concrete variants)
+        if (MATERIAL_TO_CHAT.isEmpty()) {
+            map(Material.WHITE_CONCRETE, ChatColor.WHITE, Color.fromRGB(0xF9FFFE));
+            map(Material.LIGHT_GRAY_CONCRETE, ChatColor.GRAY, Color.fromRGB(0x9D9D97));
+            map(Material.GRAY_CONCRETE, ChatColor.DARK_GRAY, Color.fromRGB(0x474F52));
+            map(Material.BLACK_CONCRETE, ChatColor.BLACK, Color.fromRGB(0x1D1D21));
+            map(Material.RED_CONCRETE, ChatColor.RED, Color.fromRGB(0xB02E26));
+            map(Material.ORANGE_CONCRETE, ChatColor.GOLD, Color.fromRGB(0xF9801D));
+            map(Material.YELLOW_CONCRETE, ChatColor.YELLOW, Color.fromRGB(0xFED83D));
+            map(Material.LIME_CONCRETE, ChatColor.GREEN, Color.fromRGB(0x80C71F));
+            map(Material.GREEN_CONCRETE, ChatColor.DARK_GREEN, Color.fromRGB(0x5E7C16));
+            map(Material.LIGHT_BLUE_CONCRETE, ChatColor.AQUA, Color.fromRGB(0x3AB3DA));
+            map(Material.CYAN_CONCRETE, ChatColor.DARK_AQUA, Color.fromRGB(0x169C9C));
+            map(Material.BLUE_CONCRETE, ChatColor.BLUE, Color.fromRGB(0x3C44AA));
+            map(Material.PURPLE_CONCRETE, ChatColor.DARK_PURPLE, Color.fromRGB(0x8932B8));
+            map(Material.MAGENTA_CONCRETE, ChatColor.LIGHT_PURPLE, Color.fromRGB(0xC74EBD));
+            map(Material.PINK_CONCRETE, ChatColor.LIGHT_PURPLE, Color.fromRGB(0xF38BAA));
+            map(Material.BROWN_CONCRETE, ChatColor.GOLD, Color.fromRGB(0x835432));
+        }
+    }
+
+    private void map(Material m, ChatColor cc, Color color) {
+        MATERIAL_TO_CHAT.put(m, cc);
+        MATERIAL_TO_COLOR.put(m, color);
     }
 
     private File ensureInDataFolder(String fileName) {
@@ -120,6 +149,10 @@ public final class GameConfig {
 
     public String getGameWorldName() {
         return gameWorldName;
+    }
+
+    public void setGameWorldName(String gameWorldName) {
+        this.gameWorldName = gameWorldName;
     }
 
     public String getLibraryWorldName() {
@@ -164,6 +197,16 @@ public final class GameConfig {
 
     public Material getBlockFor(Difficulty difficulty) {
         return difficultyBlock.get(difficulty);
+    }
+
+    public ChatColor getChatColorFor(Difficulty difficulty) {
+        Material m = getBlockFor(difficulty);
+        return MATERIAL_TO_CHAT.getOrDefault(m, ChatColor.WHITE);
+    }
+
+    public Color getBukkitColorFor(Difficulty difficulty) {
+        Material m = getBlockFor(difficulty);
+        return MATERIAL_TO_COLOR.getOrDefault(m, Color.WHITE);
     }
 
     public YamlConfiguration getLibraryCfg() {

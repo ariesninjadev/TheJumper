@@ -1,0 +1,14 @@
+[
+  {
+    "uuid": "f6014e24-0744-4be9-b391-4c5c12ad8724",
+    "name": "pvty",
+    "level": 4,
+    "bypassesPlayerLimit": false
+  },
+  {
+    "uuid": "608cabb9-307a-4c12-870e-83c1d56b93b1",
+    "name": "Fini_Panini",
+    "level": 4,
+    "bypassesPlayerLimit": false
+  }
+]

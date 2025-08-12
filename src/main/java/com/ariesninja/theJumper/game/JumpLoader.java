@@ -14,6 +14,7 @@ public final class JumpLoader {
 
     private final GameConfig config;
     private LibraryIndex libraryIndex;
+    private java.util.function.Consumer<org.bukkit.Location> globalPlacedBlockTracker;
 
     public JumpLoader(GameConfig config) {
         this.config = config;
@@ -21,6 +22,16 @@ public final class JumpLoader {
 
     public void setLibraryIndex(LibraryIndex libraryIndex) {
         this.libraryIndex = libraryIndex;
+    }
+
+    public void setGlobalPlacedBlockTracker(java.util.function.Consumer<org.bukkit.Location> tracker) {
+        this.globalPlacedBlockTracker = tracker;
+    }
+
+    private void trackGlobal(org.bukkit.Location loc) {
+        if (loc != null && globalPlacedBlockTracker != null) {
+            globalPlacedBlockTracker.accept(loc.clone());
+        }
     }
 
     public void initializeLane(World world, PlayerSession session) {
@@ -33,6 +44,14 @@ public final class JumpLoader {
                 origin.getBlockX() - half, origin.getBlockY() - 1, origin.getBlockZ() - half,
                 origin.getBlockX() + half, origin.getBlockY() - 1, origin.getBlockZ() + half,
                 platformMat);
+        // Track platform blocks for later global reset
+        for (int x = origin.getBlockX() - half; x <= origin.getBlockX() + half; x++) {
+            for (int z = origin.getBlockZ() - half; z <= origin.getBlockZ() + half; z++) {
+                org.bukkit.Location plat = new org.bukkit.Location(world, x, origin.getBlockY() - 1, z);
+                session.addPlacedBlock(plat);
+                trackGlobal(plat);
+            }
+        }
         
         // Reset queues and pending removal
         session.getQueuedEndBlocks().clear();
@@ -43,7 +62,10 @@ public final class JumpLoader {
         Location initialStart = new Location(world, origin.getBlockX() + 4, origin.getBlockY() - 1, origin.getBlockZ());
         world.getBlockAt(initialStart).setType(config.getBlockFor(session.getDifficulty()), false);
         session.setNextStartAt(initialStart);
+        session.addPlacedBlock(initialStart);
+        trackGlobal(initialStart);
         session.getQueuedStartBlocks().add(initialStart.clone());
+        session.updateMaxGeneratedX(initialStart.getBlockX());
 
         // Place initial chain
         loadNextJumpChain(world, session, config.getPreloadedJumps());
@@ -55,21 +77,40 @@ public final class JumpLoader {
             // Remove the first target from detection queue (avoid duplicate triggers)
             session.getQueuedEndBlocks().remove(0);
         }
-        session.setPendingEndRemoval(endTop);
-        // Append next jump to keep pipeline length
-        loadNextJumpChain(world, session, 1);
+        // No pending removal
+        session.setPendingEndRemoval(null);
+        // Append next jump to keep pipeline length unless we're at cap
+        int needed = config.getCompletionsPerDifficulty();
+        int remaining = needed - session.getCompletionsInDifficulty();
+        if (session.getCompletionsInDifficulty() < needed && session.getQueuedEndBlocks().size() < remaining) {
+            loadNextJumpChain(world, session, 1);
+        }
+
+        // Ensure we never display future ends/starts beyond the cap: trim extras from the back
+        while (session.getQueuedEndBlocks().size() > remaining) {
+            Location extra = session.getQueuedEndBlocks().remove(session.getQueuedEndBlocks().size() - 1);
+            world.getBlockAt(extra).setType(Material.AIR, false);
+            // also remove from placed set
+            session.getPlacedBlocks().removeIf(loc -> loc.getBlockX() == extra.getBlockX() && loc.getBlockY() == extra.getBlockY() && loc.getBlockZ() == extra.getBlockZ());
+        }
+        while (session.getQueuedStartBlocks().size() > remaining) {
+            Location extra = session.getQueuedStartBlocks().remove(session.getQueuedStartBlocks().size() - 1);
+            world.getBlockAt(extra).setType(Material.AIR, false);
+            session.getPlacedBlocks().removeIf(loc -> loc.getBlockX() == extra.getBlockX() && loc.getBlockY() == extra.getBlockY() && loc.getBlockZ() == extra.getBlockZ());
+        }
     }
 
     public void resetDifficulty(World world, PlayerSession session) {
-        // Clear everything ahead in a slice, then regenerate initial chain
-        Location origin = getStartPlatformOrigin(world, session);
-        int x1 = origin.getBlockX() - 2;
-        int x2 = x1 + 200; // generous slice to include queued area beyond
-        int y1 = origin.getBlockY() - 8;
-        int y2 = origin.getBlockY() + 16;
-        int z1 = origin.getBlockZ() - (config.getStartPlatformSize() + 4);
-        int z2 = origin.getBlockZ() + (config.getStartPlatformSize() + 4);
-        BlockUtils.fill(world, x1, y1, z1, x2, y2, z2, Material.AIR);
+        // Precisely clear recorded placed blocks for this lane
+        for (Location loc : new java.util.ArrayList<>(session.getPlacedBlocks())) {
+            world.getBlockAt(loc).setType(Material.AIR, false);
+        }
+        session.clearPlacedBlocks();
+        // Reset queues
+        session.getQueuedEndBlocks().clear();
+        session.getQueuedStartBlocks().clear();
+        session.setPendingEndRemoval(null);
+        // Rebuild lane afresh
         initializeLane(world, session);
     }
 
@@ -101,7 +142,7 @@ public final class JumpLoader {
             fallbackPlace(world, session);
             return;
         }
-        linkWithDividerAndNextStart(world, session, endTop);
+        linkWithGapAndNextStart(world, session, endTop);
     }
 
     private void fallbackPlace(World world, PlayerSession session) {
@@ -118,28 +159,74 @@ public final class JumpLoader {
         int z = start.getBlockZ();
         Location endTop = new Location(world, endX, y, z);
         world.getBlockAt(endTop).setType(config.getBlockFor(session.getDifficulty()), false);
-        linkWithDividerAndNextStart(world, session, endTop);
+        session.addPlacedBlock(endTop);
+        trackGlobal(endTop);
+        session.updateMaxGeneratedX(endTop.getBlockX());
+        linkWithGapAndNextStart(world, session, endTop);
     }
 
-    private void linkWithDividerAndNextStart(World world, PlayerSession session, Location endTop) {
+    private void linkWithGapAndNextStart(World world, PlayerSession session, Location endTop) {
         // Register end target
         session.getQueuedEndBlocks().add(endTop.clone());
+        // Also track this end block as placed so clear-on-fall works
+        session.addPlacedBlock(endTop);
+        trackGlobal(endTop);
 
-        // Divider 2 blocks beyond end top at same y: 5 wide (across Z), 1 deep (X), 1 tall
-        int dividerX = endTop.getBlockX() + 2;
         int y = endTop.getBlockY();
-        int zCenter = endTop.getBlockZ();
-        int half = config.getStartPlatformSize() / 2;
-        for (int dz = -half; dz <= half; dz++) {
-            world.getBlockAt(dividerX, y, zCenter + dz).setType(Material.BLACK_CONCRETE, false);
+        int endZ = endTop.getBlockZ();
+        int laneCenterZ = getStartPlatformOrigin(world, session).getBlockZ();
+
+        int comps = session.getCompletionsInDifficulty();
+        boolean doCenteringPath = comps > 0 && (comps % 4 == 0);
+
+        if (!doCenteringPath) {
+            // Normal: single 3-block gap then next start straight ahead, unless we're at cap
+            int needed = config.getCompletionsPerDifficulty();
+            if (session.getCompletionsInDifficulty() < needed) {
+                int nextStartX = endTop.getBlockX() + 4; // 3 gap + 1 block position
+                Location nextStart = new Location(world, nextStartX, y, endZ);
+                world.getBlockAt(nextStart).setType(config.getBlockFor(session.getDifficulty()), false);
+                session.addPlacedBlock(nextStart);
+                trackGlobal(nextStart);
+                session.setNextStartAt(nextStart);
+                session.getQueuedStartBlocks().add(nextStart.clone());
+                session.updateMaxGeneratedX(nextStartX);
+            }
+            return;
         }
 
-        // Next start 2 blocks beyond divider at same y
-        int nextStartX = dividerX + 2;
-        Location nextStart = new Location(world, nextStartX, y, zCenter);
-        world.getBlockAt(nextStart).setType(config.getBlockFor(session.getDifficulty()), false);
-        session.setNextStartAt(nextStart);
-        session.getQueuedStartBlocks().add(nextStart.clone());
+        // Centering path: series of difficulty-colored blocks spaced by 3 forward, shifting 3 toward center each step until within 2 of center.
+        Material mat = config.getBlockFor(session.getDifficulty());
+        int x = endTop.getBlockX() + 3;
+        int z = endZ;
+
+        // First block straight ahead
+        Location path = new Location(world, x, y, z);
+        world.getBlockAt(path).setType(mat, false);
+        session.addPlacedBlock(path);
+        trackGlobal(path);
+        session.updateMaxGeneratedX(x);
+
+        // Continue stepping by 3 toward center until within 2 (inclusive requires another step to mimic example)
+        while (Math.abs(z - laneCenterZ) >= 2) {
+            if (z > laneCenterZ) z -= 3; else if (z < laneCenterZ) z += 3;
+            x += 3;
+            path = new Location(world, x, y, z);
+            world.getBlockAt(path).setType(mat, false);
+            session.addPlacedBlock(path);
+            trackGlobal(path);
+            session.updateMaxGeneratedX(x);
+        }
+
+        // Place the start block at the last path position (unless at cap)
+        if (session.getCompletionsInDifficulty() < config.getCompletionsPerDifficulty()) {
+            Location nextStart = new Location(world, x, y, z);
+            world.getBlockAt(nextStart).setType(mat, false);
+            session.addPlacedBlock(nextStart);
+            trackGlobal(nextStart);
+            session.setNextStartAt(nextStart);
+            session.getQueuedStartBlocks().add(nextStart.clone());
+        }
     }
 
     private Location pasteFromLibrary(World laneWorld, PlayerSession session) {
@@ -177,21 +264,54 @@ public final class JumpLoader {
         int dy = startAt.getBlockY() - startMarker.getBlockY();
         int dz = startAt.getBlockZ() - startMarker.getBlockZ();
 
-        // Copy region blocks except markers and air
+        // Copy region blocks except markers and air, preserving block data
+        int maxTargetX = Integer.MIN_VALUE;
         for (int x = region.getMinX(); x <= region.getMaxX(); x++) {
             for (int y = region.getMinY(); y <= region.getMaxY(); y++) {
                 for (int z = region.getMinZ(); z <= region.getMaxZ(); z++) {
-                    Material m = lib.getBlockAt(x, y, z).getType();
+                    org.bukkit.block.Block src = lib.getBlockAt(x, y, z);
+                    Material m = src.getType();
                     if (m == Material.AIR || m == Material.REDSTONE_BLOCK || m == Material.EMERALD_BLOCK || m == Material.NETHERITE_BLOCK) {
                         continue;
                     }
-                    laneWorld.getBlockAt(x + dx, y + dy, z + dz).setType(m, false);
+                    int tx = x + dx;
+                    int ty = y + dy;
+                    int tz = z + dz;
+                    org.bukkit.block.Block dst = laneWorld.getBlockAt(tx, ty, tz);
+                    if (dst.getType() != m) {
+                        dst.setType(m, false);
+                    }
+                    try {
+                        org.bukkit.block.data.BlockData data = src.getBlockData().clone();
+                        dst.setBlockData(data, false);
+                    } catch (Throwable ignored) {}
+                    try {
+                        org.bukkit.block.BlockState srcState = src.getState();
+                        org.bukkit.block.BlockState dstState = dst.getState();
+                        if (srcState instanceof org.bukkit.block.Sign && dstState instanceof org.bukkit.block.Sign) {
+                            org.bukkit.block.Sign sSrc = (org.bukkit.block.Sign) srcState;
+                            org.bukkit.block.Sign sDst = (org.bukkit.block.Sign) dstState;
+                            String[] lines = sSrc.getLines();
+                            for (int i = 0; i < lines.length; i++) {
+                                sDst.setLine(i, lines[i]);
+                            }
+                            sDst.update(true, false);
+                        }
+                    } catch (Throwable ignored) {}
+                    org.bukkit.Location placed = new org.bukkit.Location(laneWorld, tx, ty, tz);
+                    session.addPlacedBlock(placed);
+                    trackGlobal(placed);
+                    if (tx > maxTargetX) maxTargetX = tx;
                 }
             }
         }
 
         // Place start marker replacement
         laneWorld.getBlockAt(startAt).setType(config.getBlockFor(session.getDifficulty()), false);
+        session.addPlacedBlock(startAt);
+        if (maxTargetX != Integer.MIN_VALUE) {
+            session.updateMaxGeneratedX(maxTargetX);
+        }
 
         // Determine end top lane position
         Location endTop;
@@ -206,6 +326,8 @@ public final class JumpLoader {
             laneWorld.getBlockAt(endTop).setType(config.getBlockFor(session.getDifficulty()), false);
         }
 
+        session.updateMaxGeneratedX(endTop.getBlockX());
+
         return endTop;
     }
 
@@ -215,12 +337,7 @@ public final class JumpLoader {
                 && loc.getBlockY() == startBlock.getBlockY()
                 && loc.getBlockZ() == startBlock.getBlockZ());
 
-        // Now it's safe to remove the previous end block if pending
-        Location pending = session.getPendingEndRemoval();
-        if (pending != null) {
-            world.getBlockAt(pending).setType(Material.AIR, false);
-            session.setPendingEndRemoval(null);
-        }
+        // No-op: we keep previous end blocks for aesthetics
     }
 }
 

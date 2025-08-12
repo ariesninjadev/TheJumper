@@ -1,0 +1,17 @@
+spawns:
+  default:
+    world: 580e9b3e-b563-456b-a5c7-4fdf60599f6d
+    world-name: lobby
+    x: 69.5
+    y: 69.0
+    z: 69.5
+    yaw: 180
+    pitch: 0
+  main:
+    world: 580e9b3e-b563-456b-a5c7-4fdf60599f6d
+    world-name: lobby
+    x: 69.5
+    y: 69.0
+    z: 69.5
+    yaw: 180
+    pitch: 0

@@ -1,0 +1,30 @@
+teleportenabled: true
+teleportauto: false
+godmode: false
+muted: false
+jailed: false
+ip-address: 127.0.0.1
+afk: false
+socialspy: false
+npc: false
+powertoolsenabled: true
+accepting-pay: true
+baltop-exempt: false
+timestamps:
+  lastteleport: 0
+  lastheal: 0
+  mute: 0
+  jail: 0
+  onlinejail: 0
+  logout: 0
+  login: 1755008244617
+money: '0'
+last-account-name: AtlasNinja
+lastlocation:
+  world: 580e9b3e-b563-456b-a5c7-4fdf60599f6d
+  world-name: lobby
+  x: 69.34243476594123
+  y: 69.0
+  z: 69.92303494108096
+  yaw: -180.0
+  pitch: 0.0

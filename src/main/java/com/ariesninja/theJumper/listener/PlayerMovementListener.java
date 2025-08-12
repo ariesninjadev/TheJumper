@@ -20,7 +20,7 @@ public final class PlayerMovementListener implements Listener {
         if (plugin.getGameManager() == null || !plugin.getGameManager().isGameActive()) return;
         Player player = event.getPlayer();
         PlayerSession session = plugin.getGameManager().getSessionManager().getSession(player.getUniqueId());
-        if (session == null) return;
+        if (session == null || !session.isActiveInEvent()) return;
 
         // Detect fall below lane base Y - buffer
         int baseY = plugin.getGameConfig().getLaneBaseY();
@@ -30,12 +30,15 @@ public final class PlayerMovementListener implements Listener {
             return;
         }
 
-        // Detect stepping onto an end target block (top of the end block)
+        // Detect stepping onto or within the end target block column (accept edges and partial blocks)
         Location to = event.getTo();
         if (to == null) return;
         for (Location targetBlock : session.getQueuedEndBlocks()) {
-            // We consider the player to have completed the jump when standing on the end block (y equals block y)
-            if (to.getBlockX() == targetBlock.getBlockX() && to.getBlockY() == targetBlock.getBlockY() + 1 && to.getBlockZ() == targetBlock.getBlockZ()) {
+            // Consider completed if within the block column; allow Y tolerance (supports fences/heads etc.)
+            if (to.getBlockX() == targetBlock.getBlockX()
+                    && to.getBlockZ() == targetBlock.getBlockZ()
+                    && to.getY() >= targetBlock.getBlockY() - 0.2
+                    && to.getY() <= targetBlock.getBlockY() + 1.6) {
                 plugin.getGameManager().handlePlayerReachedEnd(player, targetBlock);
                 break;
             }

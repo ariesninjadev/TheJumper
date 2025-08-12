@@ -1,0 +1,38 @@
+teleportenabled: true
+teleportauto: false
+godmode: false
+muted: false
+jailed: false
+ip-address: 108.44.235.16
+afk: false
+socialspy: false
+npc: false
+powertoolsenabled: true
+accepting-pay: true
+baltop-exempt: false
+timestamps:
+  lastteleport: 0
+  lastheal: 0
+  mute: 0
+  jail: 0
+  onlinejail: 0
+  logout: 1754955664574
+  login: 1754954199573
+money: '0'
+last-account-name: Lilbuddy415
+lastlocation:
+  world: f4e03856-30c6-43a4-acd0-6a71ae802091
+  world-name: thejumper_library
+  x: -3.15149172925597
+  y: -61.0
+  z: -7.044621040333415
+  yaw: 160.19036865234375
+  pitch: -6.763489246368408
+logoutlocation:
+  world: 2c59293c-840d-4a7c-83ac-796fc9c69655
+  world-name: thejumper_game
+  x: 43.664277409381604
+  y: 84.62682105587528
+  z: -7.389243671522567
+  yaw: -112.54985046386719
+  pitch: 9.680161476135254

@@ -14,6 +14,7 @@ public final class TheJumper extends JavaPlugin {
     private static TheJumper instance;
     private GameConfig gameConfig;
     private GameManager gameManager;
+    private com.ariesninja.theJumper.game.SpectateManager spectateManager;
 
     public static TheJumper getInstance() {
         return instance;
@@ -25,6 +26,10 @@ public final class TheJumper extends JavaPlugin {
 
     public GameManager getGameManager() {
         return gameManager;
+    }
+
+    public com.ariesninja.theJumper.game.SpectateManager getSpectateManager() {
+        return spectateManager;
     }
 
     @Override
@@ -41,10 +46,17 @@ public final class TheJumper extends JavaPlugin {
 
         // Initialize core manager(s)
         this.gameManager = new GameManager(this);
+        this.spectateManager = new com.ariesninja.theJumper.game.SpectateManager(this);
+        this.spectateManager.start();
 
-        // Register command
+        // Register commands
         if (getCommand("jumper") != null) {
-            getCommand("jumper").setExecutor(new JumperCommand(this));
+            JumperCommand jc = new JumperCommand(this);
+            getCommand("jumper").setExecutor(jc);
+            getCommand("jumper").setTabCompleter(jc);
+        }
+        if (getCommand("jumperhelp") != null) {
+            getCommand("jumperhelp").setExecutor(new com.ariesninja.theJumper.command.JumperHelpCommand(this));
         }
 
         // Register listeners
@@ -59,6 +71,9 @@ public final class TheJumper extends JavaPlugin {
     public void onDisable() {
         if (gameManager != null) {
             gameManager.shutdown();
+        }
+        if (spectateManager != null) {
+            spectateManager.stop();
         }
         getLogger().info("TheJumper disabled.");
     }

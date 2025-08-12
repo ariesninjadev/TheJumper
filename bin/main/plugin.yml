@@ -1,0 +1,14 @@
+name: TheJumper
+version: "0.1"
+main: com.ariesninja.theJumper.TheJumper
+api-version: "1.20"
+commands:
+  jumper:
+    description: Core command for TheJumper
+    usage: /<command> [start|stop|join|leave|reload|setdiff]
+    permission: thejumper.use
+permissions:
+  thejumper.use:
+    default: true
+  thejumper.admin:
+    default: op

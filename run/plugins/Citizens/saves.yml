@@ -1,0 +1,57 @@
+# Citizens NPC Storage
+
+last-created-npc-id: 0
+npc:
+  '0':
+    metadata:
+      cached-skin-uuid: f6014e24-0744-4be9-b391-4c5c12ad8724
+      cached-skin-uuid-name: pvty
+      nameplate-visible: 'false'
+    name: Lobby
+    uuid: 140d2949-4c3f-4bdd-90e1-16825002ed63
+    traits:
+      owner:
+        uuid: f6014e24-0744-4be9-b391-4c5c12ad8724
+      skintrait:
+        fetchDefaultSkin: true
+        signature: opKfd362h9aFgBepcLS54fpexfRPZOh6MhIJtj+S2RI/gJQJcuPy4af9tS2vdGJZDrhoy6F38yWH/WIvlIUBhGDHzLsmKpHbSXPDxSrm33FqyE1EPO7IzIpcLH+2tCOBDQgd5VQV6IvAXYbFn8MyF1Bbpc0erLxM/zsky7ysCEVA9i/3zHr74XF/RrjsFkdvohGk5X7gWBrbQTerjzgVLvIgTNB89j406vRr8/R2T62wfOtNEvQ6+x3rjTTxeWnPVrR0DtXs2//K1HJW7pPLkvTlM0d7uCqFzh63MUwitWUgOArVgM1w5e/chCYlSQg9ebW9n9v/tpHxD0L001Y10CSRRixzYK3sFgEVhy7vnZ4Ws7law73wHy4osrZiKabBQd9yaw6pDkAqpt6Hg+0+UkPkyTbTFadOW+u0Aqky4cPvmerLAD8IefqLqZbjEqQsSIn3iatVPJJkSBIWKTJYTfqzZPdo6+Nwsmr8FoHY2CQAHvu8OBwP3EU2xcDWgj5fosV2ncnSFDDbO/6GdwSnLM/OCWv9D73NAHd4QA0U+iJ/8rqrYGHDLxzVEsac7Ccs3xif2A9Af2PprapkURFbBVwnAO3CAp6cF8ZqDyaT1PDpGjzDDe4ZpKQQlh/mKrUIsDBaXeoM2dGcBh0S5xo/a0s9gv6Ihqj6wQ8bV+ert34=
+        skinName: pvty
+        textureRaw: ewogICJ0aW1lc3RhbXAiIDogMTc1NDk3NTMxOTQyOSwKICAicHJvZmlsZUlkIiA6ICJmNjAxNGUyNDA3NDQ0YmU5YjM5MTRjNWMxMmFkODcyNCIsCiAgInByb2ZpbGVOYW1lIiA6ICJwdnR5IiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzQ5Mzg4NDZmMTBiZTQyYjU5ODcxMWRmMGI2YTgwYjg4OTIwNjQyMmZlNTYxNmRlZGRkZmRlYjFjZTRjZTQzMzciLAogICAgICAibWV0YWRhdGEiIDogewogICAgICAgICJtb2RlbCIgOiAic2xpbSIKICAgICAgfQogICAgfSwKICAgICJDQVBFIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS81NmMzNTYyOGZlMWM0ZDU5ZGQ1MjU2MWEzZDAzYmZhNGUxYTc2ZDM5N2M4YjljNDc2YzJmNzdjYjZhZWJiMWRmIgogICAgfQogIH0KfQ==
+        updateSkins: false
+      hologramtrait:
+        direction: BOTTOM_UP
+        lineHeight: -1.0
+        lines:
+          '0': '&b&lThe Jumper'
+          '1': '&cCurrent Experiment:'
+      type: PLAYER
+      commandtrait:
+        cost: -1.0
+        executionMode: LINEAR
+        experienceCost: -1
+        hideErrorMessages: false
+        persistSequence: false
+        commands:
+          '0':
+            command: jumperhelp
+            hand: RIGHT
+            player: true
+            op: false
+            cooldown: 0
+            globalcooldown: 0
+            n: -1
+            delay: 0
+      spawned: true
+      location:
+        bodyYaw: 0.14889526
+        world: lobby
+        x: '69.4742'
+        y: '70.0'
+        z: '57.4646'
+        yaw: '0.1489'
+        pitch: '1.3499'
+    traitnames: scoreboardtrait,skintrait,hologramtrait,owner,commandtrait,spawned,mounttrait,location,type,inventory
+    navigator:
+      speedmodifier: '1.0'
+      avoidwater: false
+      usedefaultstuckaction: false
