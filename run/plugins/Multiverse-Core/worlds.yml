@@ -148,17 +148,17 @@ world:
     pitch: 0.0
     yaw: 0.0
   spawning:
-    misc:
-      spawn: true
-      tick-rate: -1
-      spawn-limit: -1
-      exceptions: []
     water_ambient:
       spawn: true
       tick-rate: -1
       spawn-limit: -1
       exceptions: []
     water_animal:
+      spawn: true
+      tick-rate: -1
+      spawn-limit: -1
+      exceptions: []
+    monster:
       spawn: true
       tick-rate: -1
       spawn-limit: -1
@@ -173,7 +173,7 @@ world:
       tick-rate: -1
       spawn-limit: -1
       exceptions: []
-    monster:
+    misc:
       spawn: true
       tick-rate: -1
       spawn-limit: -1
@@ -216,12 +216,12 @@ world_nether:
     pitch: 0.0
     yaw: 0.0
   spawning:
-    misc:
+    monster:
       spawn: true
       tick-rate: -1
       spawn-limit: -1
       exceptions: []
-    monster:
+    misc:
       spawn: true
       tick-rate: -1
       spawn-limit: -1

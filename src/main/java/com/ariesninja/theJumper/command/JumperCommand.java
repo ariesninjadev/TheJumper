@@ -99,6 +99,13 @@ public final class JumperCommand implements CommandExecutor, org.bukkit.command.
                     sender.sendMessage("Players only.");
                     return true;
                 }
+                // Only allow spectate from inside the event world
+                if (!plugin.getGameManager().isGameActive() || plugin.getGameConfig().getGameWorld() == null || !((Player) sender).getWorld().equals(plugin.getGameConfig().getGameWorld())) {
+                    sender.sendMessage(ChatColor.RED + "You must be in the event to spectate.");
+                    return true;
+                }
+                // Treat as if /jumper leave was run first
+                plugin.getGameManager().leave((Player) sender);
                 if (args.length < 2) {
                     sender.sendMessage(ChatColor.RED + "Usage: /" + label + " spec <player>");
                     return true;
@@ -106,6 +113,16 @@ public final class JumperCommand implements CommandExecutor, org.bukkit.command.
                 org.bukkit.entity.Player specTarget = org.bukkit.Bukkit.getPlayerExact(args[1]);
                 if (specTarget == null) {
                     sender.sendMessage(ChatColor.RED + "Player not found.");
+                    return true;
+                }
+                if (specTarget.getUniqueId().equals(((Player) sender).getUniqueId())) {
+                    sender.sendMessage(ChatColor.RED + "You cannot spectate yourself.");
+                    return true;
+                }
+                // Target must be in the event and in the event world
+                com.ariesninja.theJumper.game.PlayerSession tSess = plugin.getGameManager().getSessionManager().getSession(specTarget.getUniqueId());
+                if (tSess == null || !tSess.isActiveInEvent() || !specTarget.getWorld().equals(plugin.getGameConfig().getGameWorld())) {
+                    sender.sendMessage(ChatColor.RED + "That player is not in the event.");
                     return true;
                 }
                 com.ariesninja.theJumper.TheJumper.getInstance().getGameManager(); // ensure init
@@ -156,20 +173,29 @@ public final class JumperCommand implements CommandExecutor, org.bukkit.command.
 
     @Override
     public java.util.List<String> onTabComplete(org.bukkit.command.CommandSender sender, org.bukkit.command.Command command, String alias, String[] args) {
-        java.util.List<String> subs = java.util.Arrays.asList("start","stop","reset","join","leave","reload","setdiff","joinall","clearscore","spec","unspec");
+        boolean isAdmin = sender.hasPermission("thejumper.admin");
+        java.util.List<String> subs = isAdmin
+                ? java.util.Arrays.asList("start","stop","reset","join","leave","reload","setdiff","joinall","clearscore","spec","unspec")
+                : java.util.Arrays.asList("join","leave","spec","unspec");
         if (args.length == 1) {
             String p = args[0].toLowerCase();
             java.util.List<String> out = new java.util.ArrayList<>();
             for (String s : subs) if (s.startsWith(p)) out.add(s);
             return out;
         }
-        if (args.length == 2 && args[0].equalsIgnoreCase("setdiff")) {
-            return java.util.Arrays.asList("I","II","III","IV","V","VI","VII","VIII","IX");
-        }
-        if (args.length == 2 && args[0].equalsIgnoreCase("spec")) {
-            java.util.List<String> names = new java.util.ArrayList<>();
-            for (org.bukkit.entity.Player p : org.bukkit.Bukkit.getOnlinePlayers()) names.add(p.getName());
-            return names;
+        if (args.length == 2) {
+            if (args[0].equalsIgnoreCase("setdiff") && isAdmin) {
+                return java.util.Arrays.asList("I","II","III","IV","V","VI","VII","VIII","IX");
+            }
+            if (args[0].equalsIgnoreCase("spec")) {
+                java.util.List<String> names = new java.util.ArrayList<>();
+                String prefix = args[1].toLowerCase();
+                for (org.bukkit.entity.Player p : org.bukkit.Bukkit.getOnlinePlayers()) {
+                    String name = p.getName();
+                    if (prefix.isEmpty() || name.toLowerCase().startsWith(prefix)) names.add(name);
+                }
+                return names;
+            }
         }
         return java.util.Collections.emptyList();
     }

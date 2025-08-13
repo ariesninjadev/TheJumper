@@ -63,6 +63,7 @@ public final class TheJumper extends JavaPlugin {
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new PlayerMovementListener(this), this);
         pm.registerEvents(new PlayerQuitListener(this), this);
+        pm.registerEvents(new com.ariesninja.theJumper.listener.SpawnInterceptListener(this), this);
 
         getLogger().info("TheJumper enabled.");
     }

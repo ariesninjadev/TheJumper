@@ -19,6 +19,9 @@ public final class PlayerMovementListener implements Listener {
     public void onMove(PlayerMoveEvent event) {
         if (plugin.getGameManager() == null || !plugin.getGameManager().isGameActive()) return;
         Player player = event.getPlayer();
+        // Ignore movement outside the event world to prevent false fall detection (e.g., spawn on reconnect)
+        org.bukkit.World eventWorld = plugin.getGameConfig().getGameWorld();
+        if (eventWorld == null || !eventWorld.equals(player.getWorld())) return;
         PlayerSession session = plugin.getGameManager().getSessionManager().getSession(player.getUniqueId());
         if (session == null || !session.isActiveInEvent()) return;
 
@@ -30,23 +33,19 @@ public final class PlayerMovementListener implements Listener {
             return;
         }
 
-        // Detect stepping onto or within the end target block column (accept edges and partial blocks)
+        // Detect reaching the X-plane of the next end target (checkpoint)
         Location to = event.getTo();
         if (to == null) return;
         for (Location targetBlock : session.getQueuedEndBlocks()) {
-            // Consider completed if within the block column; allow Y tolerance (supports fences/heads etc.)
-            if (to.getBlockX() == targetBlock.getBlockX()
-                    && to.getBlockZ() == targetBlock.getBlockZ()
-                    && to.getY() >= targetBlock.getBlockY() - 0.2
-                    && to.getY() <= targetBlock.getBlockY() + 1.6) {
+            if (to.getBlockX() >= targetBlock.getBlockX()) {
                 plugin.getGameManager().handlePlayerReachedEnd(player, targetBlock);
                 break;
             }
         }
 
-        // Detect stepping onto the next start block to safely remove previous end
+        // Detect reaching the X-plane of the next start block to safely remove previous end
         for (Location startBlock : session.getQueuedStartBlocks()) {
-            if (to.getBlockX() == startBlock.getBlockX() && to.getBlockY() == startBlock.getBlockY() + 1 && to.getBlockZ() == startBlock.getBlockZ()) {
+            if (to.getBlockX() >= startBlock.getBlockX()) {
                 plugin.getGameManager().handlePlayerSteppedOnStart(player, startBlock);
                 break;
             }

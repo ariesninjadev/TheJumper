@@ -27,6 +27,8 @@ public final class PlayerSession {
     private int maxGeneratedX;
     private final java.util.Set<Location> placedBlocks = new java.util.HashSet<>();
     private boolean activeInEvent = true;
+	private String lastKnownName;
+	private Location lastKnownLocation;
     public PlayerSession(UUID playerId, int laneIndex, Difficulty startDifficulty) {
         this.playerId = playerId;
         this.laneIndex = laneIndex;
@@ -180,6 +182,22 @@ public final class PlayerSession {
     public void markDifficultyRestartedNow() {
         this.difficultyStartEpochMs = System.currentTimeMillis();
     }
+
+	public String getLastKnownName() {
+		return lastKnownName;
+	}
+
+	public void setLastKnownName(String lastKnownName) {
+		this.lastKnownName = lastKnownName;
+	}
+
+	public Location getLastKnownLocation() {
+		return lastKnownLocation == null ? null : lastKnownLocation.clone();
+	}
+
+	public void setLastKnownLocation(Location lastKnownLocation) {
+		this.lastKnownLocation = lastKnownLocation == null ? null : lastKnownLocation.clone();
+	}
 }
 
 

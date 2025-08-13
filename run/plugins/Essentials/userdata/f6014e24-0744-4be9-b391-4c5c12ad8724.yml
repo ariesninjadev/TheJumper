@@ -11,23 +11,23 @@ powertoolsenabled: true
 accepting-pay: true
 baltop-exempt: false
 timestamps:
-  lastteleport: 1755008015496
+  lastteleport: 1755064404309
   lastheal: 0
   mute: 0
   jail: 0
   onlinejail: 0
   logout: 1754978825192
-  login: 1754980939448
+  login: 1755065347266
 money: '0'
 last-account-name: pvty
 lastlocation:
-  world: 580e9b3e-b563-456b-a5c7-4fdf60599f6d
-  world-name: lobby
-  x: 69.7494455047917
-  y: 69.0
-  z: 68.90767962910616
+  world: 03742c4a-54f7-4e5c-a209-772142fe54a4
+  world-name: thejumper_game
+  x: 0.5
+  y: 81.5
+  z: 7.5
   yaw: -180.0
-  pitch: 0.0
+  pitch: 2.4540317058563232
 logoutlocation:
   world: 580e9b3e-b563-456b-a5c7-4fdf60599f6d
   world-name: lobby

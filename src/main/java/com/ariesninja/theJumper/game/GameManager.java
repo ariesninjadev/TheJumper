@@ -83,9 +83,9 @@ public final class GameManager {
         bestTimeHolderByDifficulty.clear();
         this.active = true;
         this.startEpochSeconds = System.currentTimeMillis() / 1000L;
-        Bukkit.broadcastMessage(ChatColor.DARK_AQUA + "[Jumper] " + ChatColor.GREEN + "Event started! " + ChatColor.AQUA + "[Click to Join]");
+        Bukkit.broadcastMessage(ChatColor.DARK_AQUA + "[Jumper] " + ChatColor.GREEN + "Event started!");
         // Clickable join broadcast
-        net.md_5.bungee.api.chat.TextComponent joinBtn = new net.md_5.bungee.api.chat.TextComponent(ChatColor.AQUA + "[Join The Jumper]");
+        net.md_5.bungee.api.chat.TextComponent joinBtn = new net.md_5.bungee.api.chat.TextComponent(ChatColor.AQUA + "[Click to Join]");
         joinBtn.setClickEvent(new net.md_5.bungee.api.chat.ClickEvent(net.md_5.bungee.api.chat.ClickEvent.Action.RUN_COMMAND, "/jumper join"));
         joinBtn.setHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(net.md_5.bungee.api.chat.HoverEvent.Action.SHOW_TEXT,
                 new net.md_5.bungee.api.chat.ComponentBuilder(ChatColor.GRAY + "Join the event now").create()));
@@ -182,7 +182,7 @@ public final class GameManager {
                         .orElse(null);
                 if (leader != null) {
                     Player lp = Bukkit.getPlayer(leader.getPlayerId());
-                    String name = lp != null ? lp.getName() : leader.getPlayerId().toString().substring(0, 6);
+                    String name = lp != null ? lp.getName() : (leader.getLastKnownName() != null ? leader.getLastKnownName() : leader.getPlayerId().toString().substring(0, 6));
                     Bukkit.broadcastMessage(ChatColor.DARK_AQUA + "[Jumper] " + ChatColor.GOLD + "Current leader: " + ChatColor.YELLOW + name + ChatColor.DARK_GRAY + " (" + ChatColor.RED + leader.getBestScore() + ChatColor.DARK_GRAY + ")");
                 }
             }
@@ -248,7 +248,17 @@ public final class GameManager {
             PlayerSession session = sessionManager.createSession(player.getUniqueId(), laneIndex, Difficulty.I);
             initializePlayerInLane(player, session);
         } else {
-            initializePlayerInLane(player, existing);
+            existing.setActiveInEvent(true);
+            existing.setLastKnownName(player.getName());
+            // If we have a lastKnownLocation within the game world, return them there
+            Location returnTo = existing.getLastKnownLocation();
+            if (returnTo != null && returnTo.getWorld() != null && returnTo.getWorld().equals(config.getGameWorld())) {
+                player.teleport(returnTo);
+                player.sendMessage(ChatColor.YELLOW + "Returned you to your previous spot in The Jumper.");
+            } else {
+                initializePlayerInLane(player, existing);
+                player.sendMessage(ChatColor.YELLOW + "Returned you to your lane in The Jumper.");
+            }
         }
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.8f, 1.2f);
         // Blindness/slow on join similar to level-up transition
@@ -259,9 +269,13 @@ public final class GameManager {
     public void leave(Player player) {
         UUID id = player.getUniqueId();
         // Keep session so best score remains on leaderboard
-        laneManager.freeLane(id);
+        // Keep lane allocation so they can return to the same lane
         PlayerSession s = sessionManager.getSession(id);
-        if (s != null) s.setActiveInEvent(false);
+        if (s != null) {
+            s.setActiveInEvent(false);
+            s.setLastKnownName(player.getName());
+            s.setLastKnownLocation(player.getLocation());
+        }
         player.sendMessage(ChatColor.YELLOW + "You left The Jumper event.");
         // Send to lobby/spawn
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "spawn " + player.getName());
@@ -269,8 +283,10 @@ public final class GameManager {
 
     public void handlePlayerQuitKeepScore(Player player) {
         UUID id = player.getUniqueId();
-        laneManager.freeLane(id);
+        // Keep lane allocation on quit so rejoining preserves lane/position
         player.sendMessage(ChatColor.YELLOW + "[Jumper] Your score will remain on the board.");
+        // Also inform they will be returned
+        player.sendMessage(ChatColor.YELLOW + "We'll return you to your spot when you rejoin.");
     }
 
     private void initializePlayerInLane(Player player, PlayerSession session) {
@@ -279,7 +295,7 @@ public final class GameManager {
         Location origin = laneManager.getLaneOrigin(world, session.getLaneIndex());
         jumpLoader.initializeLane(world, session);
         // Prepare player state
-        player.setGameMode(GameMode.ADVENTURE);
+        player.setGameMode(GameMode.SURVIVAL);
         // Clear inventory and armor
         player.getInventory().clear();
         player.getInventory().setArmorContents(null);
@@ -287,12 +303,6 @@ public final class GameManager {
         for (org.bukkit.potion.PotionEffect active : player.getActivePotionEffects()) {
             player.removePotionEffect(active.getType());
         }
-        // Grant sustained, no-particle buffs: high regen, saturation, night vision
-        int longDur = 20 * 60 * 60; // 1 hour
-        int maxAmp = 255;
-        player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, longDur, maxAmp, false, false, false));
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, longDur, maxAmp, false, false, false));
-        player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, longDur, 0, false, false, false));
         Location tp = origin.clone().add(0.5, 0, 0.5);
         tp.setYaw(-90f);
         tp.setPitch(0f);
@@ -398,15 +408,17 @@ public final class GameManager {
             // Second fall: reset everything
             session.resetStrikes();
             Difficulty prev = Difficulty.I; // reset to base
+            Difficulty current = session.getDifficulty();
             session.setDifficulty(prev);
             // Use a strong but shorter reset-death sound
             player.playSound(player.getLocation(), Sound.ENTITY_WITHER_DEATH, 1.5f, 1.0f);
             session.resetAllScore();
             player.sendMessage(ChatColor.DARK_RED + "Second fall! Restarting from the beginning.");
-            jumpLoader.resetAll(config.getGameWorld(), session);
-            teleportToDifficultyStart(player, session);
-            // Blindness/slow effect on second death
+            // Blindness/slow effect and death transition animation
             applyFreezeAndBlind(player, 30);
+            playDeathTransitionTitle(player, current, prev);
+            teleportToDifficultyStart(player, session);
+            jumpLoader.resetAll(config.getGameWorld(), session);
             scheduleUnfreezeAndUnblind(player, 30);
         }
     }
@@ -505,7 +517,7 @@ public final class GameManager {
         for (PlayerSession s : list) {
             if (rank > 10) break;
             Player p = Bukkit.getPlayer(s.getPlayerId());
-            String name = p != null ? p.getName() : s.getPlayerId().toString().substring(0, 6);
+            String name = p != null ? p.getName() : (s.getLastKnownName() != null ? s.getLastKnownName() : s.getPlayerId().toString().substring(0, 6));
             ChatColor color = (rank == 1) ? ChatColor.YELLOW /*gold*/ : (rank == 2) ? ChatColor.WHITE /*silver*/ : (rank == 3) ? ChatColor.GOLD /*bronze &6*/ : ChatColor.GRAY /*dull*/;
             String entry = color + "#" + rank + ChatColor.DARK_GRAY + " | " + ChatColor.RESET + name + ChatColor.DARK_GRAY + " (" + ChatColor.RED + s.getBestScore() + ChatColor.DARK_GRAY + ")";
             scoreboardObjective.getScore(entry).setScore(0);
@@ -724,6 +736,29 @@ public final class GameManager {
             }
         }
         return next != null ? next : current;
+    }
+
+    // Animated title for death reset: same arrow flip style, different subtitle
+    private void playDeathTransitionTitle(Player player, Difficulty from, Difficulty to) {
+        org.bukkit.Color fromColor = config.getBukkitColorFor(from);
+        org.bukkit.Color toColor = config.getBukkitColorFor(to);
+        ChatColor fromChat = config.getChatColorFor(from);
+        ChatColor toChat = config.getChatColorFor(to);
+        final int frames = 12; // ~1.2s at 2 ticks per frame
+        new BukkitRunnable() {
+            int i = 0;
+            @Override
+            public void run() {
+                if (i >= frames) { cancel(); return; }
+                boolean flip = (i % 2 == 0);
+                ChatColor left = flip ? fromChat : toChat;
+                ChatColor right = flip ? toChat : fromChat;
+                String arrows = left + "<<<" + ChatColor.GRAY + " Lvl " + ChatColor.WHITE + to.getDisplayName() + right + " >>>";
+                String sub = ChatColor.DARK_RED + "Death Reset";
+                player.sendTitle(arrows, sub, 0, 10, 0);
+                i++;
+            }
+        }.runTaskTimer(plugin, 0L, 2L);
     }
 }
 
