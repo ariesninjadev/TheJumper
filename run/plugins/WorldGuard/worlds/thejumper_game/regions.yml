@@ -9,4 +9,25 @@
 #
 # REMEMBER TO KEEP PERIODICAL BACKUPS.
 #
-regions: {}
+regions:
+    __global__:
+        members: {}
+        flags: {other-explosion: deny, lava-fire: deny, water-flow: deny, use: deny,
+            invincible: allow, leaf-decay: deny, snow-fall: deny, firework-damage: deny,
+            coral-fade: deny, mob-damage: deny, ravager-grief: deny, use-anvil: deny,
+            respawn-anchors: deny, mushroom-growth: deny, lightning: deny, wither-damage: deny,
+            ice-form: deny, enderman-grief: deny, pvp: deny, mob-spawning: deny, crop-growth: deny,
+            natural-hunger-drain: deny, creeper-explosion: deny, send-chat: deny,
+            vine-growth: deny, damage-animals: deny, snow-melt: deny, receive-chat: deny,
+            tnt: deny, entity-item-frame-destroy: deny, ghast-fireball: deny, frosted-ice-form: deny,
+            mycelium-spread: deny, ice-melt: deny, block-trampling: deny, interact: deny,
+            vehicle-destroy: deny, chest-access: deny, ride: deny, fire-spread: deny,
+            enderdragon-block-damage: deny, sleep: deny, sculk-growth: deny, vehicle-place: deny,
+            snowman-trails: deny, rock-growth: deny, entity-painting-destroy: deny,
+            lighter: deny, use-dripleaf: deny, pistons: deny, item-drop: deny, soil-dry: deny,
+            exp-drops: deny, copper-fade: deny, fall-damage: deny, item-frame-rotation: deny,
+            item-pickup: deny, potion-splash: deny, frosted-ice-melt: deny, lava-flow: deny,
+            grass-growth: deny}
+        owners: {}
+        type: global
+        priority: 0

@@ -50,7 +50,7 @@ npc:
         z: '57.4646'
         yaw: '0.1489'
         pitch: '1.3499'
-    traitnames: owner,type,skintrait,mounttrait,inventory,hologramtrait,scoreboardtrait,commandtrait,spawned,location
+    traitnames: type,skintrait,scoreboardtrait,inventory,hologramtrait,location,commandtrait,mounttrait,spawned,owner
     navigator:
       speedmodifier: '1.0'
       avoidwater: false

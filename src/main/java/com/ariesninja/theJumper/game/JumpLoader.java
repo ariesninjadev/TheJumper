@@ -342,61 +342,59 @@ public final class JumpLoader {
         return endTop;
     }
 
-    // Mirror block data along Z axis, inverting EAST/WEST when applicable, and flipping faces for stairs/ladders/trapdoors/signs
+    // Mirror block data along Z axis, inverting NORTH/SOUTH when applicable, and preserving EAST/WEST
     private org.bukkit.block.data.BlockData mirrorBlockDataZ(org.bukkit.block.data.BlockData original) {
         try {
             if (original instanceof org.bukkit.block.data.Directional) {
                 org.bukkit.block.data.Directional dir = (org.bukkit.block.data.Directional) original.clone();
                 org.bukkit.block.BlockFace f = dir.getFacing();
-                if (f == org.bukkit.block.BlockFace.EAST) dir.setFacing(org.bukkit.block.BlockFace.WEST);
-                else if (f == org.bukkit.block.BlockFace.WEST) dir.setFacing(org.bukkit.block.BlockFace.EAST);
-                // NORTH/SOUTH unchanged for Z-mirror
+                dir.setFacing(mirrorFaceZ(f));
                 return dir;
             }
             if (original instanceof org.bukkit.block.data.type.Stairs) {
                 org.bukkit.block.data.type.Stairs s = (org.bukkit.block.data.type.Stairs) original.clone();
-                org.bukkit.block.BlockFace f = s.getFacing();
-                if (f == org.bukkit.block.BlockFace.EAST) s.setFacing(org.bukkit.block.BlockFace.WEST);
-                else if (f == org.bukkit.block.BlockFace.WEST) s.setFacing(org.bukkit.block.BlockFace.EAST);
+                s.setFacing(mirrorFaceZ(s.getFacing()));
                 return s;
             }
             if (original instanceof org.bukkit.block.data.type.TrapDoor) {
                 org.bukkit.block.data.type.TrapDoor t = (org.bukkit.block.data.type.TrapDoor) original.clone();
-                org.bukkit.block.BlockFace f = t.getFacing();
-                if (f == org.bukkit.block.BlockFace.EAST) t.setFacing(org.bukkit.block.BlockFace.WEST);
-                else if (f == org.bukkit.block.BlockFace.WEST) t.setFacing(org.bukkit.block.BlockFace.EAST);
+                t.setFacing(mirrorFaceZ(t.getFacing()));
                 return t;
             }
             if (original instanceof org.bukkit.block.data.type.Door) {
                 org.bukkit.block.data.type.Door d = (org.bukkit.block.data.type.Door) original.clone();
-                org.bukkit.block.BlockFace f = d.getFacing();
-                if (f == org.bukkit.block.BlockFace.EAST) d.setFacing(org.bukkit.block.BlockFace.WEST);
-                else if (f == org.bukkit.block.BlockFace.WEST) d.setFacing(org.bukkit.block.BlockFace.EAST);
+                d.setFacing(mirrorFaceZ(d.getFacing()));
                 return d;
             }
             if (original instanceof org.bukkit.block.data.type.Ladder) {
                 org.bukkit.block.data.type.Ladder l = (org.bukkit.block.data.type.Ladder) original.clone();
-                org.bukkit.block.BlockFace f = l.getFacing();
-                if (f == org.bukkit.block.BlockFace.EAST) l.setFacing(org.bukkit.block.BlockFace.WEST);
-                else if (f == org.bukkit.block.BlockFace.WEST) l.setFacing(org.bukkit.block.BlockFace.EAST);
+                l.setFacing(mirrorFaceZ(l.getFacing()));
                 return l;
             }
             if (original instanceof org.bukkit.block.data.type.WallSign) {
                 org.bukkit.block.data.type.WallSign ws = (org.bukkit.block.data.type.WallSign) original.clone();
-                org.bukkit.block.BlockFace f = ws.getFacing();
-                if (f == org.bukkit.block.BlockFace.EAST) ws.setFacing(org.bukkit.block.BlockFace.WEST);
-                else if (f == org.bukkit.block.BlockFace.WEST) ws.setFacing(org.bukkit.block.BlockFace.EAST);
+                ws.setFacing(mirrorFaceZ(ws.getFacing()));
                 return ws;
             }
             if (original instanceof org.bukkit.block.data.Rotatable) {
                 org.bukkit.block.data.Rotatable r = (org.bukkit.block.data.Rotatable) original.clone();
-                org.bukkit.block.BlockFace f = r.getRotation();
-                if (f == org.bukkit.block.BlockFace.EAST) r.setRotation(org.bukkit.block.BlockFace.WEST);
-                else if (f == org.bukkit.block.BlockFace.WEST) r.setRotation(org.bukkit.block.BlockFace.EAST);
+                r.setRotation(mirrorFaceZ(r.getRotation()));
                 return r;
             }
         } catch (Throwable ignored) {}
         return original;
+    }
+
+    private org.bukkit.block.BlockFace mirrorFaceZ(org.bukkit.block.BlockFace face) {
+        switch (face) {
+            case NORTH: return org.bukkit.block.BlockFace.SOUTH;
+            case SOUTH: return org.bukkit.block.BlockFace.NORTH;
+            case NORTH_EAST: return org.bukkit.block.BlockFace.SOUTH_EAST;
+            case SOUTH_EAST: return org.bukkit.block.BlockFace.NORTH_EAST;
+            case NORTH_WEST: return org.bukkit.block.BlockFace.SOUTH_WEST;
+            case SOUTH_WEST: return org.bukkit.block.BlockFace.NORTH_WEST;
+            default: return face; // EAST/WEST and others unchanged for Z-mirror
+        }
     }
 
     public void onSteppedOnStart(World world, PlayerSession session, Location startBlock) {

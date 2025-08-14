@@ -191,8 +191,26 @@ public final class GameManager {
 
     public void stopGame() {
         if (!active) return;
+        // Snapshot top 10 before clearing sessions
+        java.util.List<PlayerSession> snapshot = new java.util.ArrayList<>(sessionManager.getAllSessions());
+        snapshot.sort((a, b) -> Integer.compare(b.getBestScore(), a.getBestScore()));
+        java.util.List<String> top10Lines = new java.util.ArrayList<>();
+        int rnk = 1;
+        for (PlayerSession s : snapshot) {
+            if (rnk > 10) break;
+            Player p = Bukkit.getPlayer(s.getPlayerId());
+            String name = p != null ? p.getName() : (s.getLastKnownName() != null ? s.getLastKnownName() : s.getPlayerId().toString().substring(0, 6));
+            ChatColor color = (rnk == 1) ? ChatColor.YELLOW : (rnk == 2) ? ChatColor.WHITE : (rnk == 3) ? ChatColor.GOLD : ChatColor.GRAY;
+            String line = color + "#" + rnk + ChatColor.DARK_GRAY + " | " + ChatColor.RESET + name + ChatColor.DARK_GRAY + " (" + ChatColor.RED + s.getBestScore() + ChatColor.DARK_GRAY + ")";
+            top10Lines.add(line);
+            rnk++;
+        }
         this.active = false;
         Bukkit.broadcastMessage(ChatColor.DARK_AQUA + "[Jumper] " + ChatColor.RED + "Event ended.");
+        if (!top10Lines.isEmpty()) {
+            Bukkit.broadcastMessage(ChatColor.DARK_AQUA + "[Jumper] " + ChatColor.AQUA + "Top 10");
+            for (String ln : top10Lines) Bukkit.broadcastMessage(ln);
+        }
         for (Player online : Bukkit.getOnlinePlayers()) {
             online.playSound(online.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 1.0f, 1.0f);
             // Send to spawn via console command
